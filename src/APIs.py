@@ -5,10 +5,9 @@ from pydantic import BaseModel
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 
-from app.deserializer import check_json, deserialize_json
-from app.model_training import clean_trainData, train_model, save_model, get_parameters
-from app.applying_model import prepare_testData, apply_latestStatModel
-
+from deserializer import check_json, deserialize_json
+from model_training import clean_trainData, train_model, save_model, get_parameters
+from applying_model import prepare_testData, apply_latestStatModel
 
 
 class request_body(BaseModel):
@@ -73,3 +72,6 @@ async def get_predictions(json_data: request_full_body) -> str:
     predictions = apply_latestStatModel(X)
     return {"predictions": str(predictions)}
 
+
+nest_asyncio.apply()
+uvicorn.run(app, port=6000)
