@@ -1,17 +1,40 @@
-# QUESTIONS : 
-    # Développement d'un service capable d'appliquer un modèle entrainer à une base de test (les informations nécessaires doivent être comme des paramètres des fonnctions).
-    # Transformation de ce service en API (port 6000)
+import pandas as pd
+import pickle
+import os
 
-# NB : 
-    # Vous pouvez ajouter d'autres fonctions si vous juger cela nécessaire. 
-    # NE PAS METTRE DES FONCTIONS HORS LE CONTEXTE DE L'APPLICATION DU MODELE'.
 
-# ATTENTION : Les 2 fonctions que j'ai listé ici doivent être présentes dans votre code sous les même noms
+def prepare_testData(df: pd.DataFrame()):
+    """Cleaning, splitting the testing data and apply the same training dumification to this data."""  
+    # convert the boolean features to numericals
+    df.replace('YES', 1, inplace=True)
+    df.replace('NO', 0, inplace=True)
 
-def prepare_testData():
-    """Cleaning, splitting the testing data and apply the same training dumification to this data."""
-    pass
+    # features selection (reduction of dimension)
+    scores = ['score1', 'score2', 'score3', 'score4',
+       'score5', 'score6', 'score7', 'score8', 'score9', 'score10', 'score11',
+       'score12', 'score13', 'score14']
 
-def apply_latestStatModel():
+    df['min_scores'] = df[scores].min(axis=1)
+    df['max_scores'] = df[scores].max(axis=1)
+    df['avrg_scores'] = df[scores].mean(axis=1)
+    
+    df.drop(scores, axis=1, inplace=True)
+
+    # extract features 
+    X = df.drop(['id'], axis=1)
+
+    # encoder categorical varaibles
+    loaded_encoder = pickle.load(open('encoder.sav', 'rb'))
+    X = loaded_encoder.transform(X)
+    return X
+
+
+
+def apply_latestStatModel(X: pd.DataFrame()):
     """Application of the last statistical model saved to the test base"""
-    pass
+    models_dir = list(os.listdir('trainned_models'))
+    # to retrieve the latest ML model
+    filename = os.path.join('trainned_models', models_dir[-1])
+    loaded_model = pickle.load(open(filename, 'rb'))
+    predictions = loaded_model.predict(X.values)
+    return predictions
