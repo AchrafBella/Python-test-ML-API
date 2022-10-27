@@ -1,13 +1,3 @@
-# QUESTIONS : 
-    # Développement d'un service capable d'entrainer un modèle statistique de prédiction sur la base de train 
-    # (les informations nécessaires doivent être comme des paramètres des fonnctions).
-    # Transformation de ce service en API (port 6000)
-
-# NB : 
-    # Vous pouvez ajouter d'autres fonctions si vous juger cela nécessaire. 
-    # NE PAS METTRE DES FONCTIONS HORS LE CONTEXTE DE LA PREDICTION.
-
-# ATTENTION : Les 4 fonctions que j'ai listé ici doivent être présentes dans votre code sous les même noms
 import pickle
 import optuna
 import pandas as pd
